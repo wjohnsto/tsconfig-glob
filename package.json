@@ -1,0 +1,38 @@
+{
+  "name": "tsconfig-glob",
+  "version": "0.1.0",
+  "description": "A lightweight npm package + cli that allows you to specify glob patterns for tsconfig files",
+  "main": "index.js",
+  "bin": {
+    "tsconfig": "cli"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wjohnsto/tsconfig-glob.git"
+  },
+  "keywords": [
+    "tsconfig",
+    "glob",
+    "filesGlob"
+  ],
+  "author": "Will Johnston <will@platypi.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wjohnsto/tsconfig-glob/issues"
+  },
+  "homepage": "https://github.com/wjohnsto/tsconfig-glob",
+  "dependencies": {
+    "exit": "^0.1.2",
+    "glob": "^5.0.10",
+    "resolve": "^1.1.6"
+  },
+  "devDependencies": {
+    "typescript": "1.5.0-alpha"
+  },
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "tsc -p .",
+    "cli": "node cli -i 4",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}

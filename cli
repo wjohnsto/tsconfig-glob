@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+'use strict';
+
+process.title = 'tsconfig-glob';
+
+var resolve = require('resolve');
+var exit = require('exit');
+
+resolve('tsconfig-glob', {
+  basedir: process.cwd()
+}, function(error, localCli) {
+  var cli;
+
+  if (error) {
+    cli = require('./index');
+  } else {
+    cli = require(localCli);
+  }
+
+  try {
+    cli({
+      args: process.argv.slice(2),
+      cwd: process.cwd()
+    });
+    exit(0);
+  } catch(e) {
+    console.error(e);
+    exit(1);
+  }
+});

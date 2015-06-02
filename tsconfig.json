@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES5",
+        "noImplicitAny": true,
+        "removeComments": true,
+        "preserveConstEnums": true,
+        "sourceMap": false
+    },
+    "filesGlob": [
+        "typings/tsd.d.ts",
+        "*.ts"
+    ],
+    "files": [
+        "typings/tsd.d.ts",
+        "index.ts"
+    ]
+}
