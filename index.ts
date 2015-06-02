@@ -47,7 +47,7 @@ function sort(a: string, b: string) {
 	return 0;
 }
 
-export = function(options: { args?: Array<string>; configPath?: string; cwd?: string; indent?: number; }) {
+export = function(options: { args?: Array<string>; configPath?: string; cwd?: string; indent?: number; }): any {
 	var root = options.cwd || process.cwd(),
 		configDir = path.resolve(root, options.configPath || '.'),
 		filePath = path.resolve(configDir, 'tsconfig.json'),
@@ -70,4 +70,6 @@ export = function(options: { args?: Array<string>; configPath?: string; cwd?: st
 	}, []).sort(sort);
 
 	fs.writeFileSync(filePath, JSON.stringify(configFile, null, options.indent || 4));
+	
+	return configFile;
 };
