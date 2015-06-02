@@ -47,21 +47,9 @@ function sort(a: string, b: string) {
 	return 0;
 }
 
-export = function(options: { args: Array<string>; cwd: string; }) {
-	var args = options.args,
-		root = options.cwd,
-		indentOptionIndex = args.indexOf('-i'),
-		indent = 4;
-
-	if(indentOptionIndex === -1) {
-		indentOptionIndex = args.indexOf('--indent');
-	}
-
-	if(indentOptionIndex > -1) {
-		indent = Number(args.splice(indentOptionIndex, 2)[1])
-	}
-
-	var configDir = path.resolve(root, args[0] || '.'),
+export = function(options: { args?: Array<string>; configPath?: string; cwd?: string; indent?: number; }) {
+	var root = options.cwd || process.cwd(),
+		configDir = path.resolve(root, options.configPath || '.'),
 		filePath = path.resolve(configDir, 'tsconfig.json'),
 		configFile: { filesGlob: Array<string>; files: Array<string>; } = require(filePath),
 		filesGlob: Array<string> = configFile.filesGlob || [],
@@ -81,5 +69,5 @@ export = function(options: { args: Array<string>; cwd: string; }) {
 		})));
 	}, []).sort(sort);
 
-	fs.writeFileSync(filePath, JSON.stringify(configFile, null, indent));
+	fs.writeFileSync(filePath, JSON.stringify(configFile, null, options.indent || 4));
 };

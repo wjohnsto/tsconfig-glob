@@ -17,10 +17,26 @@ resolve('tsconfig-glob', {
     cli = require(localCli);
   }
 
+	var args = process.argv.slice(2),
+		indentOptionIndex = args.indexOf('-i'),
+		indent = 4;
+
+	if(indentOptionIndex === -1) {
+		indentOptionIndex = args.indexOf('--indent');
+	}
+
+	if(indentOptionIndex > -1) {
+		indent = Number(args.splice(indentOptionIndex, 2)[1])
+	}
+
+  var cwd = process.cwd();
+
   try {
     cli({
-      args: process.argv.slice(2),
-      cwd: process.cwd()
+      args: args,
+      indent: indent,
+      configPath: args[0] || '.',
+      cwd: cwd
     });
     exit(0);
   } catch(e) {
