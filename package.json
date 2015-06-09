@@ -1,6 +1,6 @@
 {
   "name": "tsconfig-glob",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A lightweight npm package + cli that allows you to specify glob patterns for tsconfig files",
   "main": "index.js",
   "bin": {
