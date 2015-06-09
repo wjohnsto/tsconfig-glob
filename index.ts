@@ -60,12 +60,12 @@ export = function(options: { args?: Array<string>; configPath?: string; cwd?: st
 		ignore = files.filter(function(file) {
 			return file[0] === '!';
 		});
-	
+
 	configFile.files = include.reduce(function(files, pattern) {
 		return unique(files.concat(glob.sync(pattern, {
 			cwd: configDir,
 			root: root,
-			ignore: ignore
+			ignore: ignore.map(file => file.slice(1))
 		})));
 	}, []).sort(sort);
 
