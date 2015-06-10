@@ -1,3 +1,6 @@
+[![npm version](https://badge.fury.io/js/tsconfig-glob.svg)](http://badge.fury.io/js/tsconfig-glob)
+[![Downloads](http://img.shields.io/npm/dm/tsconfig-glob.svg)](https://npmjs.org/package/tsconfig-glob)
+
 # tsconfig-glob
 A lightweight npm package + cli that allows you to specify glob patterns for tsconfig files. Most of the credit is due to glob/minimatch, this is a very thin layer on top of those libraries. 
 
