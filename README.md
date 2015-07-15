@@ -1,8 +1,10 @@
 [![npm version](https://badge.fury.io/js/tsconfig-glob.svg)](http://badge.fury.io/js/tsconfig-glob)
 [![Downloads](http://img.shields.io/npm/dm/tsconfig-glob.svg)](https://npmjs.org/package/tsconfig-glob)
+[![Dependency Status](https://david-dm.org/wjohnsto/tsconfig-glob.svg)](https://david-dm.org/wjohnsto/tsconfig-glob)
+[![devDependency Status](https://david-dm.org/wjohnsto/tsconfig-glob/dev-status.svg)](https://david-dm.org/wjohnsto/tsconfig-glob#info=devDependencies)
 
 # tsconfig-glob
-A lightweight npm package + cli that allows you to specify glob patterns for tsconfig files. Most of the credit is due to glob/minimatch, this is a very thin layer on top of those libraries. 
+A lightweight npm package + cli that allows you to specify glob patterns for tsconfig files. Most of the credit is due to glob/minimatch, this is a very thin layer on top of those libraries.
 
 ## Install
 
@@ -54,12 +56,12 @@ tsconfig();
 	 * A relative path from cwd to the directory containing a tsconfig.json. If not specified, the '.' is used.
 	 */
 	configPath?: string;
-	
+
 	/**
 	 * The current working directory, defaults to `process.cwd()`
 	 */
 	cwd?: string;
-	
+
 	/**
 	 * The number of spaces to indent the tsconfig.json
 	 */
