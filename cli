@@ -19,7 +19,11 @@ resolve('tsconfig-glob', {
 
 	var args = process.argv.slice(2),
 		indentOptionIndex = args.indexOf('-i'),
-		indent = 4;
+		emptyOptionIndex = args.indexOf('--empty'),
+		replaceOptionIndex = args.indexOf('--replace'),
+		indent = 4,
+		empty = false,
+		replace = false;
 
 	if(indentOptionIndex === -1) {
 		indentOptionIndex = args.indexOf('--indent');
@@ -29,6 +33,16 @@ resolve('tsconfig-glob', {
 		indent = Number(args.splice(indentOptionIndex, 2)[1])
 	}
 
+	if(emptyOptionIndex > -1) {
+		args.splice(emptyOptionIndex);
+		empty = true;
+	}
+
+	if(replaceOptionIndex > -1) {
+		args.splice(replaceOptionIndex);
+		replace = true;
+	}
+
   var cwd = process.cwd();
 
   try {
@@ -36,7 +50,9 @@ resolve('tsconfig-glob', {
       args: args,
       indent: indent,
       configPath: args[0] || '.',
-      cwd: cwd
+      cwd: cwd,
+      empty: empty,
+      replace: replace
     });
     exit(0);
   } catch(e) {

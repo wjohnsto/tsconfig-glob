@@ -39,6 +39,8 @@ tsconfig .
 
 	```shell
 	-i, --indent <number> The number of spaces to indent the tsconfig.json file (defaults to 4)
+	--replace Don't keep files in the files array if they doesn't match any of the specified globs
+	--empty Output an empty files array (ignoring the specified globs)
 	```
 
 ### Using with Node
@@ -66,6 +68,16 @@ tsconfig();
 	 * The number of spaces to indent the tsconfig.json
 	 */
 	indent?: number;
+
+	/**
+	 * Don't keep files in the files array if they doesn't match any of the specified globs
+	 */
+	replace?: boolean;
+
+	/**
+	 * Output an empty files array (ignoring the specified globs)
+	 */
+	empty?: boolean;
 }
 ```
 #### Realistic Node Usage

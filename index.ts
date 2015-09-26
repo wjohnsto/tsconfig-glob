@@ -47,13 +47,13 @@ function sort(a: string, b: string) {
 	return 0;
 }
 
-export = function(options: { args?: Array<string>; configPath?: string; cwd?: string; indent?: number; }): any {
+export = function(options: { args?: Array<string>; configPath?: string; cwd?: string; indent?: number; replace?: boolean; empty?: boolean; }): any {
 	var root = options.cwd || process.cwd(),
 		configDir = path.resolve(root, options.configPath || '.'),
 		filePath = path.resolve(configDir, 'tsconfig.json'),
 		configFile: { filesGlob: Array<string>; files: Array<string>; } = require(filePath),
 		filesGlob: Array<string> = configFile.filesGlob || [],
-		files = unique(filesGlob.concat(configFile.files || [])),
+		files = unique(filesGlob.concat(!options.replace && configFile.files || [])),
 		include = files.filter(function(file) {
 			return file[0] !== '!';
 		}),
@@ -61,13 +61,17 @@ export = function(options: { args?: Array<string>; configPath?: string; cwd?: st
 			return file[0] === '!';
 		});
 
-	configFile.files = include.reduce(function(files, pattern) {
-		return unique(files.concat(glob.sync(pattern, {
-			cwd: configDir,
-			root: root,
-			ignore: ignore.map(file => file.slice(1))
-		})));
-	}, []).sort(sort);
+	if (options.empty) {
+		configFile.files = [];
+	} else {
+		configFile.files = include.reduce(function(files, pattern) {
+			return unique(files.concat(glob.sync(pattern, {
+				cwd: configDir,
+				root: root,
+				ignore: ignore.map(file => file.slice(1))
+			})));
+		}, []).sort(sort);
+	}
 
 	fs.writeFileSync(filePath, JSON.stringify(configFile, null, options.indent || 4));
 	
