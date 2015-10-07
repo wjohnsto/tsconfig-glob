@@ -7,56 +7,56 @@ var resolve = require('resolve');
 var exit = require('exit');
 
 resolve('tsconfig-glob', {
-  basedir: process.cwd()
-}, function(error, localCli) {
-  var cli;
+    basedir: process.cwd()
+}, function (error, localCli) {
+    var cli;
 
-  if (error) {
-    cli = require('./index');
-  } else {
-    cli = require(localCli);
-  }
+    if (error) {
+        cli = require('./index');
+    } else {
+        cli = require(localCli);
+    }
 
-	var args = process.argv.slice(2),
-		indentOptionIndex = args.indexOf('-i'),
-		emptyOptionIndex = args.indexOf('--empty'),
-		replaceOptionIndex = args.indexOf('--replace'),
-		indent = 4,
-		empty = false,
-		replace = false;
+    var args = process.argv.slice(2),
+        indentOptionIndex = args.indexOf('-i'),
+        emptyOptionIndex = args.indexOf('--empty'),
+        replaceOptionIndex = args.indexOf('--replace'),
+        indent = 4,
+        empty = false,
+        replace = false;
 
-	if(indentOptionIndex === -1) {
-		indentOptionIndex = args.indexOf('--indent');
-	}
+    if (indentOptionIndex === -1) {
+        indentOptionIndex = args.indexOf('--indent');
+    }
 
-	if(indentOptionIndex > -1) {
-		indent = Number(args.splice(indentOptionIndex, 2)[1])
-	}
+    if (indentOptionIndex > -1) {
+        indent = Number(args.splice(indentOptionIndex, 2)[1])
+    }
 
-	if(emptyOptionIndex > -1) {
-		args.splice(emptyOptionIndex);
-		empty = true;
-	}
+    if (emptyOptionIndex > -1) {
+        args.splice(emptyOptionIndex);
+        empty = true;
+    }
 
-	if(replaceOptionIndex > -1) {
-		args.splice(replaceOptionIndex);
-		replace = true;
-	}
+    if (replaceOptionIndex > -1) {
+        args.splice(replaceOptionIndex);
+        replace = true;
+    }
 
-  var cwd = process.cwd();
+    var cwd = process.cwd();
 
-  try {
-    cli({
-      args: args,
-      indent: indent,
-      configPath: args[0] || '.',
-      cwd: cwd,
-      empty: empty,
-      replace: replace
-    });
-    exit(0);
-  } catch(e) {
-    console.error(e);
-    exit(1);
-  }
+    try {
+        cli({
+            args: args,
+            indent: indent,
+            configPath: args[0] || '.',
+            cwd: cwd,
+            empty: empty,
+            replace: replace
+        });
+        exit(0);
+    } catch (e) {
+        console.error(e);
+        exit(1);
+    }
 });
