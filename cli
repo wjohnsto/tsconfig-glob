@@ -20,10 +20,10 @@ resolve('tsconfig-glob', {
     var args = process.argv.slice(2),
         indentOptionIndex = args.indexOf('-i'),
         emptyOptionIndex = args.indexOf('--empty'),
-        replaceOptionIndex = args.indexOf('--replace'),
+        replaceOptionIndex = args.indexOf('--no-replace'),
         indent = 4,
         empty = false,
-        replace = false;
+        replace = true;
 
     if (indentOptionIndex === -1) {
         indentOptionIndex = args.indexOf('--indent');
@@ -40,7 +40,7 @@ resolve('tsconfig-glob', {
 
     if (replaceOptionIndex > -1) {
         args.splice(replaceOptionIndex);
-        replace = true;
+        replace = false;
     }
 
     var cwd = process.cwd();

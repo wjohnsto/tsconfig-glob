@@ -60,7 +60,7 @@ function getFiles(options: IOptions, configFile: IConfigFile) {
         });
 
     return include.reduce(function(files, pattern) {
-        return unique(files.concat(glob.sync(pattern, {
+        return unique(files.concat(glob.sync(pattern, <any>{
             cwd: configDir,
             root: root,
             ignore: ignore.map(file => file.slice(1))
