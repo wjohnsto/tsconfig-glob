@@ -68,11 +68,26 @@ function getFiles(options: IOptions, configFile: IConfigFile) {
     }, []).sort(sort);
 }
 
+function eol(str: string): string {
+    let cr = '\r',
+        lf = '\n',
+        r = /\r/.test(str),
+        n = /\n/.test(str);
+
+        if (r && n) {
+            return cr + lf;
+        }
+
+        return lf;
+}
+
 export = function(options: IOptions): any {
     let root = options.cwd || process.cwd(),
         configDir = path.resolve(root, options.configPath || '.'),
         filePath = path.resolve(configDir, 'tsconfig.json'),
-        configFile: IConfigFile = require(filePath);
+        fileStr = fs.readFileSync(filePath, 'utf8'),
+        configFile: IConfigFile = JSON.parse(fileStr),
+        EOL = eol(fileStr);
 
     if (options.empty) {
         configFile.files = [];
@@ -80,7 +95,7 @@ export = function(options: IOptions): any {
         configFile.files = getFiles(options, configFile);
     }
 
-    fs.writeFileSync(filePath, JSON.stringify(configFile, null, options.indent || 4));
+    fs.writeFileSync(filePath, JSON.stringify(configFile, null, options.indent || 4).replace(/\n\r|\n|\r/g, EOL));
 
     return configFile;
 };
