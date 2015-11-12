@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as glob from 'glob';
+const stable: any = require('stable');
 
 function unique(arr: Array<string>) {
     var keys: { [key: string]: boolean; } = {},
@@ -59,13 +60,16 @@ function getFiles(options: IOptions, configFile: IConfigFile) {
             return file[0] === '!';
         });
 
-    return include.reduce(function(files, pattern) {
+    var sortedFiles = include.reduce(function(files, pattern) {
         return unique(files.concat(glob.sync(pattern, <any>{
             cwd: configDir,
             root: root,
             ignore: ignore.map(file => file.slice(1))
         })));
-    }, []).sort(sort);
+    }, []);
+    sortedFiles = stable(files);
+    sortedFiles = stable(files, sort);
+    return sortedFiles;
 }
 
 function eol(str: string): string {
