@@ -96,7 +96,7 @@ function eol(str: string): string {
     return lf;
 }
 
-export = function(options: IOptions): any {
+export = function(options: IOptions, done: Function): any {
     let root = options.cwd || process.cwd(),
         configDir = path.resolve(root, options.configPath || '.'),
         filePath = path.resolve(configDir, 'tsconfig.json'),
@@ -110,8 +110,12 @@ export = function(options: IOptions): any {
         configFile.files = getFiles(options, configFile);
     }
 
-    fs.writeFileSync(filePath, JSON.stringify(configFile, null, options.indent || 4)
-        .replace(/\n\r|\n|\r/g, EOL));
+    if(!options.indent || Number(options.indent) === 0) {
+        options.indent = 4;
+    }
+
+    fs.writeFile(filePath, JSON.stringify(configFile, null, options.indent || 4)
+        .replace(/\n\r|\n|\r/g, EOL), done);
 
     return configFile;
 };
