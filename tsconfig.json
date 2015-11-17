@@ -9,10 +9,14 @@
     },
     "filesGlob": [
         "typings/tsd.d.ts",
-        "*.ts"
+        "*.ts",
+        "test/*.ts"
     ],
     "files": [
         "typings/tsd.d.ts",
-        "index.ts"
+        "index.ts",
+        "test/a.ts",
+        "test/b.ts",
+        "test/c.ts"
     ]
 }

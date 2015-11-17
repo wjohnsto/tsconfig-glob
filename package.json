@@ -23,16 +23,17 @@
   "homepage": "https://github.com/wjohnsto/tsconfig-glob",
   "dependencies": {
     "exit": "^0.1.2",
-    "glob": "^5.0.10",
-    "resolve": "^1.1.6"
+    "glob": "^6.0.1",
+    "resolve": "^1.1.6",
+    "stable": "^0.1.5"
   },
   "devDependencies": {
-    "typescript": "1.5.0-alpha"
+    "typescript": "^1.6.2"
   },
   "scripts": {
     "prepublish": "npm run build",
     "build": "tsc -p .",
     "cli": "node cli",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "npm run build && npm run cli"
   }
 }

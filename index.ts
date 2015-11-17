@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as glob from 'glob';
+const stable: any = require('stable');
 
 function unique(arr: Array<string>) {
     var keys: { [key: string]: boolean; } = {},
@@ -51,21 +52,35 @@ function getFiles(options: IOptions, configFile: IConfigFile) {
     let root = options.cwd || process.cwd(),
         configDir = path.resolve(root, options.configPath || '.'),
         filesGlob: Array<string> = configFile.filesGlob || [],
-        files = unique(filesGlob.concat(!options.replace && configFile.files || [])),
-        include = files.filter(function(file) {
-            return file[0] !== '!';
-        }),
-        ignore = files.filter(function(file) {
-            return file[0] === '!';
-        });
+        files: Array<string> = [];
 
-    return include.reduce(function(files, pattern) {
-        return unique(files.concat(glob.sync(pattern, <any>{
+    files = unique(files.concat(filesGlob));
+
+    let include = files.filter((file) => {
+        return file[0] !== '!';
+    }),
+        ignore = files.filter((file) => {
+            return file[0] === '!';
+        }),
+        sortedFiles: Array<Array<string>> = [];
+
+    for (let pattern of include) {
+        sortedFiles.push(glob.sync(pattern, {
             cwd: configDir,
             root: root,
             ignore: ignore.map(file => file.slice(1))
-        })));
-    }, []).sort(sort);
+        }));
+    }
+
+    sortedFiles = sortedFiles.map((files) => {
+        return stable(files);
+    });
+
+    files = unique(sortedFiles.reduce((files, current) => {
+        return files.concat(current);
+    }, []));
+
+    return stable(files, sort);
 }
 
 function eol(str: string): string {
@@ -74,11 +89,11 @@ function eol(str: string): string {
         r = /\r/.test(str),
         n = /\n/.test(str);
 
-        if (r && n) {
-            return cr + lf;
-        }
+    if (r && n) {
+        return cr + lf;
+    }
 
-        return lf;
+    return lf;
 }
 
 export = function(options: IOptions): any {
@@ -95,7 +110,8 @@ export = function(options: IOptions): any {
         configFile.files = getFiles(options, configFile);
     }
 
-    fs.writeFileSync(filePath, JSON.stringify(configFile, null, options.indent || 4).replace(/\n\r|\n|\r/g, EOL));
+    fs.writeFileSync(filePath, JSON.stringify(configFile, null, options.indent || 4)
+        .replace(/\n\r|\n|\r/g, EOL));
 
     return configFile;
 };
@@ -110,6 +126,5 @@ interface IOptions {
     configPath?: string;
     cwd?: string;
     indent?: number;
-    replace?: boolean;
     empty?: boolean;
 }
