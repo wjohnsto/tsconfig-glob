@@ -46,7 +46,9 @@ tsconfig .
 
 ```ts
 import * as tsconfig from 'tsconfig-glob';
-tsconfig();
+tsconfig(null, function(err) => {
+    ...
+});
 ```
 
 #### Options
@@ -82,5 +84,7 @@ tsconfig({
 	configPath: '.',
 	cwd: process.cwd(),
 	indent: 2
+}, function(err) {
+    ...
 });
 ```
