@@ -33,21 +33,28 @@ function sort(a, b) {
     return 0;
 }
 function getFiles(options, configFile) {
-    var root = options.cwd || process.cwd(), configDir = path.resolve(root, options.configPath || '.'), filesGlob = configFile.filesGlob || [], files = unique(filesGlob.concat(!options.replace && configFile.files || [])), include = files.filter(function (file) {
+    var root = options.cwd || process.cwd(), configDir = path.resolve(root, options.configPath || '.'), filesGlob = configFile.filesGlob || [], files = [];
+    files = unique(files.concat(filesGlob));
+    var include = files.filter(function (file) {
         return file[0] !== '!';
     }), ignore = files.filter(function (file) {
         return file[0] === '!';
-    });
-    var sortedFiles = include.reduce(function (files, pattern) {
-        return unique(files.concat(glob.sync(pattern, {
+    }), sortedFiles = [];
+    for (var _i = 0; _i < include.length; _i++) {
+        var pattern = include[_i];
+        sortedFiles.push(glob.sync(pattern, {
             cwd: configDir,
             root: root,
             ignore: ignore.map(function (file) { return file.slice(1); })
-        })));
-    }, []);
-    sortedFiles = stable(files);
-    sortedFiles = stable(files, sort);
-    return sortedFiles;
+        }));
+    }
+    sortedFiles = sortedFiles.map(function (files) {
+        return stable(files);
+    });
+    files = unique(sortedFiles.reduce(function (files, current) {
+        return files.concat(current);
+    }, []));
+    return stable(files, sort);
 }
 function eol(str) {
     var cr = '\r', lf = '\n', r = /\r/.test(str), n = /\n/.test(str);
@@ -64,6 +71,7 @@ module.exports = function (options) {
     else {
         configFile.files = getFiles(options, configFile);
     }
-    fs.writeFileSync(filePath, JSON.stringify(configFile, null, options.indent || 4).replace(/\n\r|\n|\r/g, EOL));
+    fs.writeFileSync(filePath, JSON.stringify(configFile, null, options.indent || 4)
+        .replace(/\n\r|\n|\r/g, EOL));
     return configFile;
 };
