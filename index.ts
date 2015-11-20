@@ -115,7 +115,7 @@ export = function(options: IOptions = {}, done: Function = () => {}): any {
     }
 
     fs.writeFile(filePath, JSON.stringify(configFile, null, options.indent)
-        .replace(/\n\r|\n|\r/g, EOL), done);
+        .replace(/\n\r|\n|\r/g, EOL) + EOL, done);
 
     return configFile;
 };
