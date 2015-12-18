@@ -114,8 +114,16 @@ export = function(options: IOptions = {}, done: Function = () => {}): any {
         options.indent = 4;
     }
 
-    fs.writeFile(filePath, JSON.stringify(configFile, null, options.indent)
-        .replace(/\n\r|\n|\r/g, EOL) + EOL, done);
+    let outputStr = JSON.stringify(configFile, null, options.indent);
+
+    outputStr = outputStr.replace(/\n\r|\n|\r/g, EOL) + EOL;
+    fileStr = fileStr.replace(/\n\r|\n|\r/g, EOL) + EOL;
+
+    if(outputStr === fileStr) {
+        setImmediate(done);
+    } else {
+        fs.writeFile(filePath, outputStr, done);
+    }
 
     return configFile;
 };
