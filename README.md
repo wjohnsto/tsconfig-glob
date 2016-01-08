@@ -59,6 +59,11 @@ tsconfig(null, function(err) => {
 	 * A relative path from cwd to the directory containing a tsconfig.json. If not specified, the '.' is used.
 	 */
 	configPath?: string;
+    
+    /**
+     * Typescript confiuration file name in `configPath` directory
+     */
+    configFileName?: string;
 
 	/**
 	 * The current working directory, defaults to `process.cwd()`
