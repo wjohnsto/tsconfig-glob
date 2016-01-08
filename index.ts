@@ -67,9 +67,8 @@ function getFiles(options: IOptions, configFile: IConfigFile) {
     for (let pattern of include) {
         sortedFiles.push(glob.sync(pattern, {
             cwd: configDir,
-            root: root,
             ignore: ignore.map(file => file.slice(1))
-        }));
+        } as glob.IOptions));
     }
 
     sortedFiles = sortedFiles.map((files) => {
@@ -98,8 +97,9 @@ function eol(str: string): string {
 
 export = function(options: IOptions = {}, done: Function = () => {}): any {
     let root = options.cwd || process.cwd(),
+        configName = options.configFileName || 'tsconfig.json',
         configDir = path.resolve(root, options.configPath || '.'),
-        filePath = path.resolve(configDir, 'tsconfig.json'),
+        filePath = path.resolve(configDir, configName),
         fileStr = fs.readFileSync(filePath, 'utf8'),
         configFile: IConfigFile = JSON.parse(fileStr),
         EOL = eol(fileStr);
@@ -136,6 +136,7 @@ interface IConfigFile {
 interface IOptions {
     args?: Array<string>;
     configPath?: string;
+    configFileName?: string;
     cwd?: string;
     indent?: number;
     empty?: boolean;
