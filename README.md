@@ -79,6 +79,11 @@ tsconfig(null, function(err) => {
 	 * Output an empty files array (ignoring the specified globs)
 	 */
 	empty?: boolean;
+
+	/**
+	 * Asynchronous callback (default: true)
+	 */
+	async?: boolean;
 }
 ```
 #### Realistic Node Usage

@@ -95,13 +95,14 @@ function eol(str: string): string {
     return lf;
 }
 
-export = function(options: IOptions = {}, done: Function = () => {}): any {
+export = function(options: IOptions = {}, done: Function = () => { }): any {
     let root = options.cwd || process.cwd(),
         configName = options.configFileName || 'tsconfig.json',
         configDir = path.resolve(root, options.configPath || '.'),
         filePath = path.resolve(configDir, configName),
         fileStr = fs.readFileSync(filePath, 'utf8'),
         configFile: IConfigFile = JSON.parse(fileStr),
+        async = (options.async != null) ? options.async : true,
         EOL = eol(fileStr);
     if (options.empty) {
         configFile.files = [];
@@ -109,7 +110,7 @@ export = function(options: IOptions = {}, done: Function = () => {}): any {
         configFile.files = getFiles(options, configFile);
     }
 
-    if(!options.indent || Number(options.indent) === 0) {
+    if (!options.indent || Number(options.indent) === 0) {
         options.indent = 4;
     }
 
@@ -118,11 +119,19 @@ export = function(options: IOptions = {}, done: Function = () => {}): any {
     outputStr = outputStr.replace(/\n\r|\n|\r/g, EOL) + EOL;
     fileStr = fileStr.replace(/\n\r|\n|\r/g, EOL) + EOL;
 
-    if(outputStr === fileStr) {
+    if (outputStr === fileStr) {
         setImmediate(done);
     } else {
-        fs.writeFileSync(filePath, outputStr);
-        done();
+        if (async) {
+            fs.writeFile(filePath, outputStr, done);
+        } else {
+            try {
+                fs.writeFileSync(filePath, outputStr);
+                done();
+            } catch (error) {
+                done(error);
+            }
+        }
     }
 
     return configFile;
@@ -140,4 +149,5 @@ interface IOptions {
     cwd?: string;
     indent?: number;
     empty?: boolean;
+    async?: boolean;
 }
