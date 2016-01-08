@@ -122,7 +122,7 @@ export = function(options: IOptions = {}, done: Function = () => {}): any {
     if(outputStr === fileStr) {
         setImmediate(done);
     } else {
-        fs.writeFile(filePath, outputStr, done);
+        fs.writeFileSync(filePath, outputStr, done);
     }
 
     return configFile;
