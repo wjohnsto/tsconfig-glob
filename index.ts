@@ -103,7 +103,6 @@ export = function(options: IOptions = {}, done: Function = () => {}): any {
         fileStr = fs.readFileSync(filePath, 'utf8'),
         configFile: IConfigFile = JSON.parse(fileStr),
         EOL = eol(fileStr);
-
     if (options.empty) {
         configFile.files = [];
     } else {
@@ -122,7 +121,8 @@ export = function(options: IOptions = {}, done: Function = () => {}): any {
     if(outputStr === fileStr) {
         setImmediate(done);
     } else {
-        fs.writeFileSync(filePath, outputStr, done);
+        fs.writeFileSync(filePath, outputStr);
+        done();
     }
 
     return configFile;
