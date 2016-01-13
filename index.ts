@@ -120,7 +120,11 @@ export = function(options: IOptions = {}, done: Function = () => { }): any {
     fileStr = fileStr.replace(/\n\r|\n|\r/g, EOL) + EOL;
 
     if (outputStr === fileStr) {
-        setImmediate(done);
+        if (async) {
+            setImmediate(done);
+        } else {
+            done();
+        }
     } else {
         if (async) {
             fs.writeFile(filePath, outputStr, done);
