@@ -67,9 +67,8 @@ function getFiles(options: IOptions, configFile: IConfigFile) {
     for (let pattern of include) {
         sortedFiles.push(glob.sync(pattern, {
             cwd: configDir,
-            root: root,
             ignore: ignore.map(file => file.slice(1))
-        }));
+        } as glob.IOptions));
     }
 
     sortedFiles = sortedFiles.map((files) => {
@@ -96,21 +95,22 @@ function eol(str: string): string {
     return lf;
 }
 
-export = function(options: IOptions = {}, done: Function = () => {}): any {
+export = function(options: IOptions = {}, done: Function = () => { }): any {
     let root = options.cwd || process.cwd(),
+        configName = options.configFileName || 'tsconfig.json',
         configDir = path.resolve(root, options.configPath || '.'),
-        filePath = path.resolve(configDir, 'tsconfig.json'),
+        filePath = path.resolve(configDir, configName),
         fileStr = fs.readFileSync(filePath, 'utf8'),
         configFile: IConfigFile = JSON.parse(fileStr),
+        async = (options.async != null) ? options.async : true,
         EOL = eol(fileStr);
-
     if (options.empty) {
         configFile.files = [];
     } else {
         configFile.files = getFiles(options, configFile);
     }
 
-    if(!options.indent || Number(options.indent) === 0) {
+    if (!options.indent || Number(options.indent) === 0) {
         options.indent = 4;
     }
 
@@ -119,10 +119,19 @@ export = function(options: IOptions = {}, done: Function = () => {}): any {
     outputStr = outputStr.replace(/\n\r|\n|\r/g, EOL) + EOL;
     fileStr = fileStr.replace(/\n\r|\n|\r/g, EOL) + EOL;
 
-    if(outputStr === fileStr) {
+    if (outputStr === fileStr) {
         setImmediate(done);
     } else {
-        fs.writeFile(filePath, outputStr, done);
+        if (async) {
+            fs.writeFile(filePath, outputStr, done);
+        } else {
+            try {
+                fs.writeFileSync(filePath, outputStr);
+                done();
+            } catch (error) {
+                done(error);
+            }
+        }
     }
 
     return configFile;
@@ -136,7 +145,9 @@ interface IConfigFile {
 interface IOptions {
     args?: Array<string>;
     configPath?: string;
+    configFileName?: string;
     cwd?: string;
     indent?: number;
     empty?: boolean;
+    async?: boolean;
 }
