@@ -95,15 +95,53 @@ function eol(str: string): string {
     return lf;
 }
 
+function bomCheck1(str: any): boolean {
+    return typeof str === 'string' && str.charCodeAt(0) === 0xFEFF;
+}
+
+function bomCheck2(str: any): boolean {
+    return typeof str === 'string' && (<any>str)[0] === 0xEF && (<any>str)[1] === 0xBB && (<any>str)[2] === 0xBF;
+}
+
+function getBom(str: string): string {
+    if (bomCheck1(str)) {
+        return str[0];
+    }
+
+    if (bomCheck2(str)) {
+        return str.slice(0, 3);
+    }
+
+    return '';
+}
+
+function stripBom(str: string): string {
+    if (bomCheck1(str)) {
+        return str.slice(1);
+    }
+
+    if (bomCheck2(str)) {
+        return str.slice(3);
+    }
+
+    return str;
+}
+
 export = function(options: IOptions = {}, done: Function = () => { }): any {
     let root = options.cwd || process.cwd(),
         configName = options.configFileName || 'tsconfig.json',
         configDir = path.resolve(root, options.configPath || '.'),
         filePath = path.resolve(configDir, configName),
-        fileStr = fs.readFileSync(filePath, 'utf8'),
-        configFile: IConfigFile = JSON.parse(fileStr),
+        fileStr = fs.readFileSync(filePath, 'utf8');
+
+    let bom = getBom(fileStr);
+
+    fileStr = stripBom(fileStr);
+
+    let configFile: IConfigFile = JSON.parse(fileStr),
         async = (options.async != null) ? options.async : true,
         EOL = eol(fileStr);
+
     if (options.empty) {
         configFile.files = [];
     } else {
@@ -114,18 +152,21 @@ export = function(options: IOptions = {}, done: Function = () => { }): any {
         options.indent = 4;
     }
 
-    let outputStr = JSON.stringify(configFile, null, options.indent);
+    let newLineRegex = /\n\r|\r\n|\n|\r/g,
+        outputStr = JSON.stringify(configFile, null, options.indent),
+        outputCompare = outputStr.replace(newLineRegex, ''),
+        fileCompare = fileStr.replace(newLineRegex, '');
 
-    outputStr = outputStr.replace(/\n\r|\n|\r/g, EOL) + EOL;
-    fileStr = fileStr.replace(/\n\r|\n|\r/g, EOL) + EOL;
-
-    if (outputStr === fileStr) {
+    if (outputCompare === fileCompare) {
         if (async) {
             setImmediate(done);
         } else {
             done();
         }
     } else {
+        outputStr = outputStr.replace(newLineRegex, EOL) + EOL;
+        outputStr = bom.concat(outputStr);
+
         if (async) {
             fs.writeFile(filePath, outputStr, done);
         } else {
