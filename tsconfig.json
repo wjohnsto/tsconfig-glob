@@ -8,12 +8,12 @@
         "sourceMap": false
     },
     "filesGlob": [
-        "typings/tsd.d.ts",
+        "typings/main.d.ts",
         "*.ts",
         "test/*.ts"
     ],
     "files": [
-        "typings/tsd.d.ts",
+        "typings/main.d.ts",
         "index.ts",
         "test/a.ts",
         "test/b.ts",

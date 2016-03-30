@@ -28,12 +28,14 @@
     "stable": "^0.1.5"
   },
   "devDependencies": {
-    "typescript": "^1.8.9"
+    "typescript": "^1.8.9",
+    "typings": "^0.7.9"
   },
   "scripts": {
-    "prepublish": "npm run build",
+    "prepublish": "npm run typings && npm run build",
     "build": "tsc -p .",
     "cli": "node cli",
-    "test": "npm run build && npm run cli"
+    "test": "npm run build && npm run cli",
+    "typings": "typings install"
   }
 }
