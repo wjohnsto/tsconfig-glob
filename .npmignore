@@ -29,3 +29,6 @@ typings
 *.ts
 tsconfig.json
 tsd.json
+
+# IntelliJ settings
+.idea

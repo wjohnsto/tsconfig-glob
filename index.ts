@@ -127,6 +127,17 @@ function stripBom(str: string): string {
     return str;
 }
 
+function filesArrayHandler(options:IOptions, configFile:IConfigFile) {
+    if (!configFile.filesGlob) { // nothing to do, if there is no fileGlob property present
+        return;
+    }
+
+    if (options.empty) {
+        configFile.files = [];
+    } else {
+        configFile.files = getFiles(options, configFile);
+    }
+}
 export = function(options: IOptions = {}, done: Function = () => { }): any {
     let root = options.cwd || process.cwd(),
         configName = options.configFileName || 'tsconfig.json',
@@ -142,11 +153,7 @@ export = function(options: IOptions = {}, done: Function = () => { }): any {
         async = (options.async != null) ? options.async : true,
         EOL = eol(fileStr);
 
-    if (options.empty) {
-        configFile.files = [];
-    } else {
-        configFile.files = getFiles(options, configFile);
-    }
+    filesArrayHandler(options, configFile);
 
     if (!options.indent || Number(options.indent) === 0) {
         options.indent = 4;
