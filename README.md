@@ -46,7 +46,7 @@ tsconfig .
 
 ```ts
 import * as tsconfig from 'tsconfig-glob';
-tsconfig(null, function(err) => {
+tsconfig(null, (err) => {
     ...
 });
 ```
@@ -59,27 +59,27 @@ tsconfig(null, function(err) => {
 	 * A relative path from cwd to the directory containing a tsconfig.json. If not specified, the '.' is used.
 	 */
 	configPath?: string;
-    
-    /**
-     * Typescript confiuration file name in `configPath` directory
-     */
-    configFileName?: string;
-
+	
+	/**
+	* Typescript configuration file name in `configPath` directory
+	*/
+	configFileName?: string;
+	
 	/**
 	 * The current working directory, defaults to `process.cwd()`
 	 */
 	cwd?: string;
-
+	
 	/**
 	 * The number of spaces to indent the tsconfig.json
 	 */
 	indent?: number;
-
+	
 	/**
 	 * Output an empty files array (ignoring the specified globs)
 	 */
 	empty?: boolean;
-
+	
 	/**
 	 * Asynchronous callback (default: true)
 	 */
