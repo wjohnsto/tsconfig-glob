@@ -1,3 +1,6 @@
+# NOTE
+This package is only necessary for [TypeScript < 2.0](https://github.com/Microsoft/TypeScript/wiki/What's-new-in-TypeScript#user-content-glob-support-in-tsconfigjson) and will not be supported for TypeScript >= 2.0 until further notice.
+
 [![npm version](https://badge.fury.io/js/tsconfig-glob.svg)](http://badge.fury.io/js/tsconfig-glob)
 [![Downloads](http://img.shields.io/npm/dm/tsconfig-glob.svg)](https://npmjs.org/package/tsconfig-glob)
 [![Dependency Status](https://david-dm.org/wjohnsto/tsconfig-glob.svg)](https://david-dm.org/wjohnsto/tsconfig-glob)
@@ -59,27 +62,27 @@ tsconfig(null, (err) => {
 	 * A relative path from cwd to the directory containing a tsconfig.json. If not specified, the '.' is used.
 	 */
 	configPath?: string;
-	
+
 	/**
 	* Typescript configuration file name in `configPath` directory
 	*/
 	configFileName?: string;
-	
+
 	/**
 	 * The current working directory, defaults to `process.cwd()`
 	 */
 	cwd?: string;
-	
+
 	/**
 	 * The number of spaces to indent the tsconfig.json
 	 */
 	indent?: number;
-	
+
 	/**
 	 * Output an empty files array (ignoring the specified globs)
 	 */
 	empty?: boolean;
-	
+
 	/**
 	 * Asynchronous callback (default: true)
 	 */
